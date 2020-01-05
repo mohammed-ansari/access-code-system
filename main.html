@@ -1,0 +1,114 @@
+<html>
+
+<head>
+    <title>
+        Access Code System
+    </title>
+    <style>
+        .acs {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        #display {
+            margin-top: 60px;
+            margin-left: 300px;
+            width: 60%;
+            border: 3px solid #73AD21;
+            padding: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input[type=text] {
+            width: 50%;
+            padding: 12px 20px;
+            margin: auto;
+            box-sizing: border-box;
+            border: 2px solid black;
+            border-radius: 4px;
+        }
+
+        #inputs {
+            margin-top: 60px;
+            margin-left: 300px;
+            width: 60%;
+        }
+    </style>
+    <script>
+        var access_codes = [];
+        function build() {
+            var frontCode = document.getElementById("front").value;
+            var uniqueCode = document.getElementById("code").value;
+            var rearCode = document.getElementById("rear").value;
+            if(access_codes.length == 0 && frontCode && uniqueCode && rearCode){
+                access_codes.push({
+                    front: frontCode, code: uniqueCode, rear: rearCode
+                })
+            }else if (frontCode && uniqueCode && rearCode) {
+                insertObjectToAccessCodes(access_codes, frontCode, rearCode, uniqueCode);
+            }
+
+            var display = document.getElementById("display");
+            var output = "";
+            if (access_codes.length) {
+                for (var i = 0; i < access_codes.length; i++) {
+                    output += '<button class="acs">Part-' + (i + 1) + ' ' + access_codes[i].code + '</button>'
+                }
+                display.innerHTML = output;
+            }
+
+        }
+
+        function insertObjectToAccessCodes(access_codes, frontCode, rearCode, uniqueCode) {
+            for (var i = 0; i < access_codes.length; i++) {
+                if (access_codes[i].front == rearCode) {
+                    if(i==0){
+                        access_codes.splice(i, 0, {
+                        front: frontCode, code: uniqueCode, rear: rearCode
+                    });
+                    }else{
+                        access_codes.splice(i - 1, 0, {
+                        front: frontCode, code: uniqueCode, rear: rearCode
+                    });
+                    }
+                    break;
+                } else if (access_codes[i].rear == frontCode) {
+                    access_codes.splice(i+1, 0, {
+                        front: frontCode, code: uniqueCode, rear: rearCode
+                    });
+                    break;
+                }
+            }
+        }
+    </script>
+</head>
+
+<body onload="javascript:build()">
+    <h1>Access Code System</h1>
+    <div id="inputs">
+        <label for="front"> Front Code:</label>
+        <input type="text" id="front" name="front"><br><br>
+        <label for="front">Unique Code:</label>
+        <input type="text" id="code" name="code"><br><br>
+        <label for="front"> Rear Code:</label>
+        <input type="text" id="rear" name="rear"><br><br>
+        <button onclick="build()">Process</button>
+    </div>
+    <div id="display">
+
+    </div>
+</body>
+
+</html>
